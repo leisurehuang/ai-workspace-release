@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 工作台 — 跑在你自己电脑上的私人办公助理</title>
+<meta name="description" content="日程、任务、资讯、邮件、提醒，全部本地数据 + 自备大模型。macOS / Windows / Linux，中文界面，无订阅无云端无遥测。">
+<meta property="og:title" content="AI 工作台 — 私人办公助理">
+<meta property="og:description" content="数据不出本机的私人办公助理：飞书日程、AI 任务看板、资讯与邮件关注、晨报周报。三平台桌面端。">
+<meta property="og:image" content="https://raw.githubusercontent.com/leisurehuang/ai-workspace-release/main/docs/social-preview.png">
+<meta property="og:url" content="https://leisurehuang.github.io/ai-workspace-release/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%234F46E5'/%3E%3Ccircle cx='32' cy='26' r='7' fill='white'/%3E%3Cpath d='M18 50a14 14 0 0 1 28 0z' fill='white'/%3E%3C/svg%3E">
+<style>
+  :root {
+    --indigo: #4F46E5; --indigo-dark: #4338CA;
+    --bg: #FAFAFC; --card: #FFFFFF; --text: #18181B; --muted: #71717A;
+    --line: #E4E4E7; --soft: #F4F4F5; --green: #16A34A;
+    --radius: 20px; --shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(24,24,27,.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#0E0E12; --card:#17171D; --text:#F4F4F5; --muted:#9CA3AF; --line:#26262E; --soft:#1E1E26; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35); }
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Segoe UI","Microsoft YaHei",sans-serif; background:var(--bg); color:var(--text); line-height:1.65; -webkit-font-smoothing:antialiased; }
+  .wrap { max-width:1080px; margin:0 auto; padding:0 24px; }
+  a { color:inherit; text-decoration:none; }
+
+  /* header */
+  header { position:sticky; top:0; z-index:50; background:color-mix(in srgb, var(--bg) 82%, transparent); backdrop-filter:blur(16px); border-bottom:1px solid var(--line); }
+  .nav { display:flex; align-items:center; gap:28px; height:60px; }
+  .logo { display:flex; align-items:center; gap:10px; font-weight:700; font-size:17px; }
+  .logo svg { display:block; }
+  .nav-links { display:flex; gap:22px; font-size:14.5px; color:var(--muted); margin-left:8px; }
+  .nav-links a:hover { color:var(--text); }
+  .nav-cta { margin-left:auto; display:flex; gap:10px; }
+  @media (max-width:760px){ .nav-links{display:none;} }
+
+  /* buttons */
+  .btn { display:inline-flex; align-items:center; gap:7px; padding:9px 18px; border-radius:999px; font-size:14.5px; font-weight:600; border:1px solid var(--line); background:var(--card); transition:.18s; cursor:pointer; }
+  .btn:hover { border-color:var(--indigo); color:var(--indigo); transform:translateY(-1px); }
+  .btn-primary { background:var(--indigo); border-color:var(--indigo); color:#fff; box-shadow:0 6px 18px rgba(79,70,229,.28); }
+  .btn-primary:hover { background:var(--indigo-dark); color:#fff; }
+  .btn-lg { padding:13px 26px; font-size:16px; }
+
+  /* hero */
+  .hero { padding:84px 0 40px; text-align:center; }
+  .chip { display:inline-flex; align-items:center; gap:8px; font-size:13px; color:var(--muted); border:1px solid var(--line); background:var(--card); padding:5px 14px; border-radius:999px; margin-bottom:22px; }
+  .chip b { color:var(--text); font-weight:600; }
+  .chip .dot { width:7px; height:7px; border-radius:50%; background:var(--green); }
+  h1 { font-size:clamp(34px, 5.4vw, 56px); letter-spacing:-.02em; line-height:1.15; font-weight:800; }
+  .hero p.sub { max-width:640px; margin:20px auto 0; font-size:clamp(16px, 2vw, 19px); color:var(--muted); }
+  .hero .cta { display:flex; gap:14px; justify-content:center; margin-top:32px; flex-wrap:wrap; }
+  .hero .platform-hint { margin-top:14px; font-size:13px; color:var(--muted); }
+
+  .shot-frame { margin:52px auto 0; max-width:920px; border-radius:14px; border:1px solid var(--line); background:var(--card); box-shadow:var(--shadow); overflow:hidden; }
+  .shot-frame .bar { display:flex; gap:6px; padding:11px 14px; border-bottom:1px solid var(--line); }
+  .shot-frame .bar i { width:10px; height:10px; border-radius:50%; background:var(--line); }
+  .shot-frame img { display:block; width:100%; }
+
+  /* sections */
+  section { padding:76px 0 8px; }
+  .sec-head { text-align:center; margin-bottom:44px; }
+  .sec-head .kicker { color:var(--indigo); font-weight:700; font-size:13.5px; letter-spacing:.12em; text-transform:uppercase; }
+  .sec-head h2 { font-size:clamp(26px, 3.6vw, 36px); letter-spacing:-.01em; margin-top:8px; }
+  .sec-head p { color:var(--muted); max-width:560px; margin:10px auto 0; }
+
+  .grid { display:grid; gap:18px; }
+  .grid-3 { grid-template-columns:repeat(3,1fr); }
+  .grid-2 { grid-template-columns:repeat(2,1fr); }
+  @media (max-width:860px){ .grid-3{grid-template-columns:1fr;} .grid-2{grid-template-columns:1fr;} }
+
+  .feature { background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:24px; box-shadow:var(--shadow); transition:.2s; }
+  .feature:hover { transform:translateY(-3px); border-color:color-mix(in srgb, var(--indigo) 45%, var(--line)); }
+  .feature .icon { width:42px; height:42px; border-radius:12px; background:color-mix(in srgb, var(--indigo) 12%, transparent); display:grid; place-items:center; font-size:21px; margin-bottom:14px; }
+  .feature h3 { font-size:17px; margin-bottom:6px; }
+  .feature p { font-size:14px; color:var(--muted); }
+
+  .gallery { display:grid; gap:22px; grid-template-columns:1fr 1fr; }
+  @media (max-width:860px){ .gallery{grid-template-columns:1fr;} }
+  .shot { background:var(--card); border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow); transition:.2s; }
+  .shot:hover { transform:translateY(-3px); }
+  .shot img { display:block; width:100%; border-bottom:1px solid var(--line); }
+  .shot .cap { padding:15px 18px; }
+  .shot .cap b { font-size:15px; display:block; }
+  .shot .cap span { font-size:13px; color:var(--muted); }
+
+  /* download */
+  .dl-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  @media (max-width:860px){ .dl-grid{grid-template-columns:1fr;} }
+  .dl { position:relative; background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:22px; text-align:center; box-shadow:var(--shadow); transition:.2s; }
+  .dl:hover { border-color:var(--indigo); transform:translateY(-3px); }
+  .dl .os { font-size:15px; font-weight:700; margin:8px 0 2px; }
+  .dl .note { font-size:12.5px; color:var(--muted); margin-bottom:14px; }
+  .dl .btn { width:100%; justify-content:center; }
+  .dl.suggest { border-color:var(--indigo); }
+  .suggest-badge { position:absolute; top:-11px; left:50%; transform:translateX(-50%); background:var(--indigo); color:#fff; font-size:11.5px; font-weight:700; padding:3px 12px; border-radius:999px; white-space:nowrap; }
+  .dl-note { text-align:center; color:var(--muted); font-size:13px; margin-top:22px; }
+  .dl-note a { color:var(--indigo); }
+
+  .reveal { opacity:0; transform:translateY(16px); transition:opacity .5s ease, transform .5s ease; }
+  .reveal.in { opacity:1; transform:none; }
+
+  /* privacy */
+  .privacy { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+  @media (max-width:960px){ .privacy{grid-template-columns:repeat(2,1fr);} }
+  @media (max-width:560px){ .privacy{grid-template-columns:1fr;} }
+
+  /* faq */
+  details { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:18px 22px; margin-bottom:12px; }
+  details summary { font-weight:600; font-size:15.5px; cursor:pointer; list-style:none; display:flex; justify-content:space-between; align-items:center; }
+  details summary::after { content:"+"; color:var(--muted); font-size:20px; transition:.2s; }
+  details[open] summary::after { transform:rotate(45deg); }
+  details p { margin-top:10px; font-size:14.5px; color:var(--muted); }
+
+  footer { margin-top:90px; border-top:1px solid var(--line); padding:34px 0 44px; color:var(--muted); font-size:13.5px; display:flex; flex-wrap:wrap; gap:14px; justify-content:space-between; }
+  footer a { color:var(--indigo); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="#">
+      <svg width="26" height="26" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#4F46E5"/><circle cx="32" cy="26" r="7" fill="#fff"/><path d="M18 50a14 14 0 0 1 28 0z" fill="#fff"/></svg>
+      AI 工作台
+    </a>
+    <nav class="nav-links">
+      <a href="#features">功能</a><a href="#gallery">界面</a><a href="#download">下载</a><a href="#privacy">隐私</a><a href="#faq">FAQ</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="btn btn-primary" href="#download">立即下载</a>
+    </div>
+  </div>
+</header>
+
+<div class="wrap hero">
+  <div class="chip"><span class="dot"></span>最新版本 <b id="ver">v0.1.1</b><span id="verdate" style="opacity:.7"></span></div>
+  <h1>跑在你自己电脑上的<br>私人办公助理</h1>
+  <p class="sub">日程、任务、资讯、邮件、提醒 —— 一个应用全部搞定。数据留在本机，AI 由你自己的大模型接口驱动，无订阅、无云端、无遥测。</p>
+  <div class="cta">
+    <a class="btn btn-primary btn-lg" id="hero-dl" href="#download">立即下载</a>
+    <a class="btn btn-lg" href="https://github.com/leisurehuang/ai-workspace-release" target="_blank" rel="noopener">GitHub 仓库</a>
+  </div>
+  <div class="platform-hint" id="hero-hint">macOS · Windows · Linux 全平台支持</div>
+  <div class="shot-frame reveal">
+    <div class="bar"><i></i><i></i><i></i></div>
+    <img src="./docs/screenshots/dashboard.png" alt="AI 工作台仪表盘" width="1440" height="900">
+  </div>
+</div>
+
+<section id="features">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="kicker">Features</div>
+      <h2>它能做什么</h2>
+      <p>六个模块相互打通：便签一键变任务，日程任务汇成晨报，重要邮件主动找你。</p>
+    </div>
+    <div class="grid grid-3">
+      <div class="feature reveal"><div class="icon">📅</div><h3>会议日程</h3><p>同步飞书日历：今日时间轴、本周总览、会议统计，会前自动提醒，进行中的会议实时标记。</p></div>
+      <div class="feature reveal"><div class="icon">🗒</div><h3>便签</h3><p>随手记录、置顶、颜色标记。一键让 AI 解析成任务——自动提炼标题、优先级与截止日。</p></div>
+      <div class="feature reveal"><div class="icon">📋</div><h3>任务看板</h3><p>可配置列、拖拽流转、P0-P3 优先级、标签、过期高亮，看板 / 优先级 / 截止日三种视图。</p></div>
+      <div class="feature reveal"><div class="icon">📰</div><h3>每日资讯</h3><p>RSS 抓取 + AI 分类与一句话摘要。想加新分类？写一段提示词就够了。</p></div>
+      <div class="feature reveal"><div class="icon">📧</div><h3>邮件关注</h3><p>IMAP 同步收件箱，关注规则 + AI 重要性打分，老板的邮件再也不会淹没在周报里。</p></div>
+      <div class="feature reveal"><div class="icon">🔔</div><h3>AI 助理</h3><p>每日晨报、周报草稿、基于本地数据的对话问答——问一句"我今天有什么会"就有答案。</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="gallery">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="kicker">Gallery</div>
+      <h2>界面一览</h2>
+      <p>Apple 风格设计语言，全中文界面，明暗双主题。</p>
+    </div>
+    <div class="gallery">
+      <div class="shot reveal"><img src="./docs/screenshots/calendar.png" alt="会议日程" loading="lazy"><div class="cap"><b>会议日程</b><span>今日时间轴 · 本周总览 · 会议统计</span></div></div>
+      <div class="shot reveal"><img src="./docs/screenshots/board.png" alt="任务看板" loading="lazy"><div class="cap"><b>任务看板</b><span>拖拽流转 · 优先级 · 过期高亮</span></div></div>
+      <div class="shot reveal"><img src="./docs/screenshots/notes.png" alt="便签" loading="lazy"><div class="cap"><b>便签</b><span>随手记 · AI 一键转任务</span></div></div>
+      <div class="shot reveal"><img src="./docs/screenshots/news.png" alt="每日资讯" loading="lazy"><div class="cap"><b>每日资讯</b><span>AI 分类摘要 · 提示词自定义分类</span></div></div>
+      <div class="shot reveal"><img src="./docs/screenshots/emails.png" alt="邮件关注" loading="lazy"><div class="cap"><b>邮件关注</b><span>规则 + AI 打分 · 重要邮件主动推送</span></div></div>
+      <div class="shot reveal"><img src="./docs/screenshots/assistant.png" alt="AI 助理" loading="lazy"><div class="cap"><b>AI 助理</b><span>本地数据问答 · 晨报 · 周报</span></div></div>
+      <div class="shot reveal"><img src="./docs/screenshots/report.png" alt="周报助手" loading="lazy"><div class="cap"><b>周报助手</b><span>本周数据一键生成周报草稿</span></div></div>
+      <div class="shot reveal"><img src="./docs/screenshots/dashboard-dark.png" alt="暗色模式" loading="lazy"><div class="cap"><b>暗色模式</b><span>全局深色主题支持</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="download">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="kicker">Download</div>
+      <h2>下载安装</h2>
+      <p>免费开源协议分发（MIT）。Windows / Linux 支持应用内自动更新，macOS 一键直达新版本。</p>
+    </div>
+    <div class="dl-grid">
+      <div class="dl reveal" data-os="mac">
+        <div class="icon" style="font-size:30px"></div>
+        <div class="os">macOS</div>
+        <div class="note">Apple 芯片（M 系列）</div>
+        <a class="btn btn-primary" href="https://github.com/leisurehuang/ai-workspace-release/releases/latest/download/ai-workspace-arm64.dmg">下载 .dmg</a>
+        <div style="margin-top:10px"><a style="font-size:12.5px;color:var(--muted)" href="https://github.com/leisurehuang/ai-workspace-release/releases/latest/download/ai-workspace-x64.dmg">Intel 芯片版本 →</a></div>
+      </div>
+      <div class="dl reveal" data-os="win">
+        <div class="icon" style="font-size:30px">🪟</div>
+        <div class="os">Windows</div>
+        <div class="note">Windows 10 / 11（x64）</div>
+        <a class="btn btn-primary" href="https://github.com/leisurehuang/ai-workspace-release/releases/latest/download/ai-workspace-setup.exe">下载安装器</a>
+        <div style="margin-top:10px;font-size:12.5px;color:var(--muted)">支持应用内自动更新</div>
+      </div>
+      <div class="dl reveal" data-os="linux">
+        <div class="icon" style="font-size:30px">🐧</div>
+        <div class="os">Linux</div>
+        <div class="note">AppImage / deb（x64）</div>
+        <a class="btn btn-primary" href="https://github.com/leisurehuang/ai-workspace-release/releases/latest/download/ai-workspace-linux-x86_64.AppImage">下载 AppImage</a>
+        <div style="margin-top:10px"><a style="font-size:12.5px;color:var(--muted)" href="https://github.com/leisurehuang/ai-workspace-release/releases/latest/download/ai-workspace-linux-amd64.deb">deb 包（Debian/Ubuntu）→</a></div>
+      </div>
+    </div>
+    <div class="dl-note reveal">
+      个人项目未购买代码签名证书：macOS 首次打开请右键 →「打开」；Windows SmartScreen 请选「仍要运行」。<br>
+      全部版本历史见 <a href="https://github.com/leisurehuang/ai-workspace-release/releases" target="_blank" rel="noopener">Releases</a>。
+    </div>
+  </div>
+</section>
+
+<section id="privacy">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="kicker">Privacy</div>
+      <h2>数据与隐私</h2>
+      <p>你的工作数据值得留在你自己手里。</p>
+    </div>
+    <div class="privacy">
+      <div class="feature reveal"><div class="icon">🔒</div><h3>本地优先</h3><p>全部数据存本机 SQLite，密钥 AES-256-GCM 加密落盘，随时用任意工具查看导出。</p></div>
+      <div class="feature reveal"><div class="icon">🧠</div><h3>自带模型</h3><p>任意 OpenAI 兼容接口（智谱 / DeepSeek / Kimi / 火方舟 / OpenAI）均可接入。</p></div>
+      <div class="feature reveal"><div class="icon">🚫</div><h3>无遥测</h3><p>无账号、无订阅、无埋点。唯一的出站请求发往你自己配置的服务。</p></div>
+      <div class="feature reveal"><div class="icon">📦</div><h3>自由迁移</h3><p>数据目录独立于应用，拷贝即备份，跨设备迁移零门槛。</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="kicker">FAQ</div>
+      <h2>常见问题</h2>
+    </div>
+    <div style="max-width:760px;margin:0 auto">
+      <details class="reveal"><summary>需要配置什么才能用？</summary><p>安装后在「设置」页填入任意 OpenAI 兼容大模型接口即可解锁全部 AI 能力；飞书（日历/推送）与邮箱（IMAP）按需可选配置，不配置也不影响基础功能。</p></details>
+      <details class="reveal"><summary>为什么不开放源代码？</summary><p>个人项目，源码暂不开放。安装包无混淆加壳，本地数据为标准 SQLite，可随时用任意工具查看与导出——不信黑盒，信透明数据。</p></details>
+      <details class="reveal"><summary>怎么升级？</summary><p>v0.1.1 起 Windows / Linux 支持应用内自动更新（后台下载、一键重启安装）；macOS 在「设置 → 关于与更新」直达新版本下载。也可随时从本页重新下载覆盖安装，数据不受影响。</p></details>
+      <details class="reveal"><summary>断网能用吗？</summary><p>日程、任务、便签、历史资讯等本地功能完全可用；AI 摘要问答与外部同步（飞书/邮箱/RSS）需要网络。</p></details>
+      <details class="reveal"><summary>升级会丢数据吗？</summary><p>不会。数据存于系统标准应用数据目录，与程序本体分离，覆盖安装自动继承全部数据。</p></details>
+    </div>
+  </div>
+</section>
+
+<footer class="wrap">
+  <div>AI 工作台 · 本地优先的私人办公助理</div>
+  <div><a href="https://github.com/leisurehuang/ai-workspace-release" target="_blank" rel="noopener">GitHub</a> · 按 <a href="https://raw.githubusercontent.com/leisurehuang/ai-workspace-release/main/LICENSE" target="_blank" rel="noopener">MIT</a> 协议分发</div>
+</footer>
+
+<script>
+(function () {
+  // latest version from the public release API (graceful on failure)
+  fetch("https://api.github.com/repos/leisurehuang/ai-workspace-release/releases/latest")
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (rel) {
+      if (!rel || !rel.tag_name) return;
+      var ver = document.getElementById("ver");
+      var date = document.getElementById("verdate");
+      ver.textContent = rel.tag_name;
+      if (rel.published_at) date.textContent = " · " + new Date(rel.published_at).toLocaleDateString("zh-CN");
+    })
+    .catch(function () {});
+
+  // platform suggestion
+  var ua = navigator.userAgent, plat = (navigator.platform || "") + " " + ua;
+  var os = /Mac/i.test(plat) ? "mac" : /Win/i.test(plat) ? "win" : /Linux/i.test(plat) && !/Android/i.test(ua) ? "linux" : null;
+  if (os) {
+    var card = document.querySelector('.dl[data-os="' + os + '"]');
+    if (card) {
+      card.classList.add("suggest");
+      var badge = document.createElement("div");
+      badge.className = "suggest-badge";
+      badge.textContent = "为你的平台推荐";
+      card.appendChild(badge);
+    }
+    var names = { mac: "macOS", win: "Windows", linux: "Linux" };
+    document.getElementById("hero-dl").textContent = "下载 " + names[os] + " 版";
+    document.getElementById("hero-hint").textContent = "检测到你的系统：" + names[os];
+  }
+
+  // scroll reveal
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll(".reveal").forEach(function (el) { io.observe(el); });
+})();
+</script>
+</body>
+</html>
