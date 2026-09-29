@@ -56,7 +56,7 @@
   .shot-frame { margin:52px auto 0; max-width:920px; border-radius:14px; border:1px solid var(--line); background:var(--card); box-shadow:var(--shadow); overflow:hidden; }
   .shot-frame .bar { display:flex; gap:6px; padding:11px 14px; border-bottom:1px solid var(--line); }
   .shot-frame .bar i { width:10px; height:10px; border-radius:50%; background:var(--line); }
-  .shot-frame img { display:block; width:100%; }
+  .shot-frame img { display:block; width:100%; height:auto; }
 
   /* sections */
   section { padding:76px 0 8px; }
@@ -80,7 +80,7 @@
   @media (max-width:860px){ .gallery{grid-template-columns:1fr;} }
   .shot { background:var(--card); border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow); transition:.2s; }
   .shot:hover { transform:translateY(-3px); }
-  .shot img { display:block; width:100%; border-bottom:1px solid var(--line); }
+  .shot img { display:block; width:100%; height:auto; border-bottom:1px solid var(--line); }
   .shot .cap { padding:15px 18px; }
   .shot .cap b { font-size:15px; display:block; }
   .shot .cap span { font-size:13px; color:var(--muted); }
