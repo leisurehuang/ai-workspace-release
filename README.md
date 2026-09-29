@@ -23,8 +23,8 @@ macOS / Windows / Linux · 中文界面 · 暗色模式 · 无订阅、无云端
 | macOS（Apple 芯片） | [ai-workspace-arm64.dmg](https://github.com/leisurehuang/ai-workspace-release/releases/latest/download/ai-workspace-arm64.dmg) | M1/M2/M3/M4 系列 |
 | macOS（Intel 芯片） | [ai-workspace-x64.dmg](https://github.com/leisurehuang/ai-workspace-release/releases/latest/download/ai-workspace-x64.dmg) | 旧款 Intel Mac |
 | Windows | [ai-workspace-setup.exe](https://github.com/leisurehuang/ai-workspace-release/releases/latest/download/ai-workspace-setup.exe) | NSIS 安装器（x64） |
-| Linux (AppImage) | [ai-workspace-linux-x64.AppImage](https://github.com/leisurehuang/ai-workspace-release/releases/latest/download/ai-workspace-linux-x64.AppImage) | 下载后 `chmod +x` 直接运行 |
-| Linux (deb) | [ai-workspace-linux-x64.deb](https://github.com/leisurehuang/ai-workspace-release/releases/latest/download/ai-workspace-linux-x64.deb) | Debian / Ubuntu 系 |
+| Linux (AppImage) | [ai-workspace-linux-x86_64.AppImage](https://github.com/leisurehuang/ai-workspace-release/releases/latest/download/ai-workspace-linux-x86_64.AppImage) | 下载后 `chmod +x` 直接运行 |
+| Linux (deb) | [ai-workspace-linux-amd64.deb](https://github.com/leisurehuang/ai-workspace-release/releases/latest/download/ai-workspace-linux-amd64.deb) | Debian / Ubuntu 系 |
 
 > 全部版本历史见 [Releases](https://github.com/leisurehuang/ai-workspace-release/releases)。
 
