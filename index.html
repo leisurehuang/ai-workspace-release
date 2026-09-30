@@ -33,11 +33,12 @@
   .logo svg { display:block; }
   .nav-links { display:flex; gap:22px; font-size:14.5px; color:var(--muted); margin-left:8px; }
   .nav-links a:hover { color:var(--text); }
-  .nav-cta { margin-left:auto; display:flex; gap:10px; }
+  .nav-cta { margin-left:auto; display:flex; gap:10px; align-items:center; }
+  #lang-toggle { padding:6px 14px; font-size:13px; }
   @media (max-width:760px){ .nav-links{display:none;} }
 
   /* buttons */
-  .btn { display:inline-flex; align-items:center; gap:7px; padding:9px 18px; border-radius:999px; font-size:14.5px; font-weight:600; border:1px solid var(--line); background:var(--card); transition:.18s; cursor:pointer; }
+  .btn { display:inline-flex; align-items:center; gap:7px; padding:9px 18px; border-radius:999px; font-size:14.5px; font-weight:600; border:1px solid var(--line); background:var(--card); transition:.18s; cursor:pointer; font-family:inherit; }
   .btn:hover { border-color:var(--indigo); color:var(--indigo); transform:translateY(-1px); }
   .btn-primary { background:var(--indigo); border-color:var(--indigo); color:#fff; box-shadow:0 6px 18px rgba(79,70,229,.28); }
   .btn-primary:hover { background:var(--indigo-dark); color:#fff; }
@@ -116,6 +117,194 @@
   footer { margin-top:90px; border-top:1px solid var(--line); padding:34px 0 44px; color:var(--muted); font-size:13.5px; display:flex; flex-wrap:wrap; gap:14px; justify-content:space-between; }
   footer a { color:var(--indigo); }
 </style>
+<script>
+// Bilingual dictionary (zh = source copy). Applied before first paint.
+var SITE_I18N = {
+  zh: {
+    "meta.title": "AI 工作台 — 跑在你自己电脑上的私人办公助理",
+    "meta.desc": "日程、任务、资讯、邮件、提醒，全部本地数据 + 自备大模型。macOS / Windows / Linux，中文界面，无订阅无云端无遥测。",
+    "logo": "AI 工作台",
+    "nav.features": "功能", "nav.gallery": "界面", "nav.download": "下载", "nav.privacy": "隐私",
+    "nav.cta": "立即下载",
+    "lang.toggle": "English",
+    "chip.latest": "最新版本",
+    "hero.title1": "跑在你自己电脑上的", "hero.title2": "私人办公助理",
+    "hero.sub": "日程、任务、资讯、邮件、提醒 —— 一个应用全部搞定。数据留在本机，AI 由你自己的大模型接口驱动，无订阅、无云端、无遥测。",
+    "hero.download": "立即下载",
+    "hero.github": "GitHub 仓库",
+    "hero.platforms": "macOS · Windows · Linux 全平台支持",
+    "hero.shot.alt": "AI 工作台仪表盘",
+    "feat.h2": "它能做什么",
+    "feat.sub": "六个模块相互打通：便签一键变任务，日程任务汇成晨报，重要邮件主动找你。",
+    "feat.calendar.t": "会议日程",
+    "feat.calendar.d": "同步飞书日历：今日时间轴、本周总览、会议统计，会前自动提醒，进行中的会议实时标记。",
+    "feat.notes.t": "便签",
+    "feat.notes.d": "随手记录、置顶、颜色标记。一键让 AI 解析成任务——自动提炼标题、优先级与截止日。",
+    "feat.board.t": "任务看板",
+    "feat.board.d": "可配置列、拖拽流转、P0-P3 优先级、标签、过期高亮，看板 / 优先级 / 截止日三种视图。",
+    "feat.news.t": "每日资讯",
+    "feat.news.d": "RSS 抓取 + AI 分类与一句话摘要。想加新分类？写一段提示词就够了。",
+    "feat.mail.t": "邮件关注",
+    "feat.mail.d": "IMAP 同步收件箱，关注规则 + AI 重要性打分，老板的邮件再也不会淹没在周报里。",
+    "feat.assistant.t": "AI 助理",
+    "feat.assistant.d": "每日晨报、周报草稿、基于本地数据的对话问答——问一句“我今天有什么会”就有答案。",
+    "gal.h2": "界面一览",
+    "gal.sub": "Apple 风格设计语言，明暗双主题，支持简体中文 / 繁體中文 / English。",
+    "gal.calendar.t": "会议日程", "gal.calendar.d": "今日时间轴 · 本周总览 · 会议统计",
+    "gal.board.t": "任务看板", "gal.board.d": "拖拽流转 · 优先级 · 过期高亮",
+    "gal.notes.t": "便签", "gal.notes.d": "随手记 · AI 一键转任务",
+    "gal.news.t": "每日资讯", "gal.news.d": "AI 分类摘要 · 提示词自定义分类",
+    "gal.mail.t": "邮件关注", "gal.mail.d": "规则 + AI 打分 · 重要邮件主动推送",
+    "gal.assistant.t": "AI 助理", "gal.assistant.d": "本地数据问答 · 晨报 · 周报",
+    "gal.report.t": "周报助手", "gal.report.d": "本周数据一键生成周报草稿",
+    "gal.dark.t": "暗色模式", "gal.dark.d": "全局深色主题支持",
+    "dl.h2": "下载安装",
+    "dl.sub": "免费开源协议分发（MIT）。Windows / Linux 支持应用内自动更新，macOS 一键直达新版本。",
+    "dl.mac.note": "Apple 芯片（M 系列）", "dl.mac.btn": "下载 .dmg", "dl.mac.intel": "Intel 芯片版本 →",
+    "dl.win.note": "Windows 10 / 11（x64）", "dl.win.btn": "下载安装器", "dl.win.auto": "支持应用内自动更新",
+    "dl.linux.note": "AppImage / deb（x64）", "dl.linux.btn": "下载 AppImage", "dl.linux.deb": "deb 包（Debian/Ubuntu）→",
+    "dl.sign1": "个人项目未购买代码签名证书：macOS 首次打开请右键 →「打开」；Windows SmartScreen 请选「仍要运行」。",
+    "dl.history": "全部版本历史见",
+    "prv.h2": "数据与隐私",
+    "prv.sub": "你的工作数据值得留在你自己手里。",
+    "prv.local.t": "本地优先",
+    "prv.local.d": "全部数据存本机 SQLite，密钥 AES-256-GCM 加密落盘，随时用任意工具查看导出。",
+    "prv.model.t": "自带模型",
+    "prv.model.d": "任意 OpenAI 兼容接口（智谱 / DeepSeek / Kimi / 火山方舟 / OpenAI）均可接入。",
+    "prv.telemetry.t": "无遥测",
+    "prv.telemetry.d": "无账号、无订阅、无埋点。唯一的出站请求发往你自己配置的服务。",
+    "prv.migrate.t": "自由迁移",
+    "prv.migrate.d": "数据目录独立于应用，拷贝即备份，跨设备迁移零门槛。",
+    "faq.h2": "常见问题",
+    "faq.q1": "需要配置什么才能用？",
+    "faq.a1": "安装后在「设置」页填入任意 OpenAI 兼容大模型接口即可解锁全部 AI 能力；飞书（日历/推送）与邮箱（IMAP）按需可选配置，不配置也不影响基础功能。",
+    "faq.q2": "为什么不开放源代码？",
+    "faq.a2": "个人项目，源码暂不开放。安装包无混淆加壳，本地数据为标准 SQLite，可随时用任意工具查看与导出——不信黑盒，信透明数据。",
+    "faq.q3": "怎么升级？",
+    "faq.a3": "v0.1.1 起 Windows / Linux 支持应用内自动更新（后台下载、一键重启安装）；macOS 在「设置 → 关于与更新」直达新版本下载。也可随时从本页重新下载覆盖安装，数据不受影响。",
+    "faq.q4": "断网能用吗？",
+    "faq.a4": "日程、任务、便签、历史资讯等本地功能完全可用；AI 摘要问答与外部同步（飞书/邮箱/RSS）需要网络。",
+    "faq.q5": "升级会丢数据吗？",
+    "faq.a5": "不会。数据存于系统标准应用数据目录，与程序本体分离，覆盖安装自动继承全部数据。",
+    "footer.tagline": "AI 工作台 · 本地优先的私人办公助理",
+    "footer.license.pre": "按",
+    "footer.license.post": "协议分发",
+    "suggest.badge": "为你的平台推荐",
+    "hero.dl.os": "下载 {os} 版",
+    "hero.hint.detected": "检测到你的系统：{os}"
+  },
+  en: {
+    "meta.title": "AI Workspace — A private office assistant that runs on your own computer",
+    "meta.desc": "Schedule, tasks, news, email and reminders — all local data plus your own LLM. macOS / Windows / Linux. No subscription, no cloud, no telemetry.",
+    "logo": "AI Workspace",
+    "nav.features": "Features", "nav.gallery": "Screens", "nav.download": "Download", "nav.privacy": "Privacy",
+    "nav.cta": "Download",
+    "lang.toggle": "中文",
+    "chip.latest": "Latest",
+    "hero.title1": "A private office assistant",
+    "hero.title2": "that runs on your own computer",
+    "hero.sub": "Schedule, tasks, news, email, reminders — all in one app. Your data stays on your machine, AI runs on your own LLM API. No subscription, no cloud, no telemetry.",
+    "hero.download": "Download",
+    "hero.github": "GitHub Repo",
+    "hero.platforms": "Available for macOS · Windows · Linux",
+    "hero.shot.alt": "AI Workspace dashboard",
+    "feat.h2": "What it does",
+    "feat.sub": "Six connected modules: notes become tasks in one click, schedule and tasks roll up into a morning brief, and important emails find you.",
+    "feat.calendar.t": "Meetings",
+    "feat.calendar.d": "Syncs your Feishu calendar: today's timeline, week overview and stats, pre-meeting reminders, and a live badge for ongoing meetings.",
+    "feat.notes.t": "Notes",
+    "feat.notes.d": "Quick capture, pinning and color labels. AI turns a note into a task in one click — title, priority and due date extracted automatically.",
+    "feat.board.t": "Task Board",
+    "feat.board.d": "Configurable columns, drag and drop, P0–P3 priorities, tags and overdue highlights, with board / priority / due-date views.",
+    "feat.news.t": "Daily News",
+    "feat.news.d": "RSS fetching with AI categorization and one-line summaries. Want a new category? Just write a prompt.",
+    "feat.mail.t": "Email Watch",
+    "feat.mail.d": "IMAP inbox sync with watch rules plus AI importance scoring — your boss's email never drowns in the noise.",
+    "feat.assistant.t": "AI Assistant",
+    "feat.assistant.d": "Daily brief, weekly report drafts, and chat over your local data — ask \"what meetings do I have today\" and get an answer.",
+    "gal.h2": "Screens",
+    "gal.sub": "Apple-style design language, light & dark themes, available in Simplified Chinese, Traditional Chinese and English.",
+    "gal.calendar.t": "Meetings", "gal.calendar.d": "Today's timeline · Week overview · Stats",
+    "gal.board.t": "Task Board", "gal.board.d": "Drag & drop · Priorities · Overdue highlights",
+    "gal.notes.t": "Notes", "gal.notes.d": "Quick capture · One-click AI to task",
+    "gal.news.t": "Daily News", "gal.news.d": "AI summaries · Prompt-defined categories",
+    "gal.mail.t": "Email Watch", "gal.mail.d": "Rules + AI scoring · Push for what matters",
+    "gal.assistant.t": "AI Assistant", "gal.assistant.d": "Local-data Q&A · Daily brief · Weekly report",
+    "gal.report.t": "Weekly Report", "gal.report.d": "One-click draft from this week's data",
+    "gal.dark.t": "Dark mode", "gal.dark.d": "Dark theme across the whole app",
+    "dl.h2": "Download",
+    "dl.sub": "Distributed free under the MIT license. Windows / Linux support in-app auto-updates; macOS links straight to the latest version.",
+    "dl.mac.note": "Apple silicon (M series)", "dl.mac.btn": "Download .dmg", "dl.mac.intel": "Intel version →",
+    "dl.win.note": "Windows 10 / 11 (x64)", "dl.win.btn": "Download installer", "dl.win.auto": "In-app auto-updates",
+    "dl.linux.note": "AppImage / deb (x64)", "dl.linux.btn": "Download AppImage", "dl.linux.deb": "deb package (Debian/Ubuntu) →",
+    "dl.sign1": "Personal project without a code-signing certificate: on macOS, right-click → Open on first launch; on Windows SmartScreen, choose \"Run anyway\".",
+    "dl.history": "Full version history on",
+    "prv.h2": "Data & Privacy",
+    "prv.sub": "Your work data deserves to stay in your own hands.",
+    "prv.local.t": "Local-first",
+    "prv.local.d": "Everything lives in a local SQLite database; secrets are AES-256-GCM encrypted on disk — inspect or export anytime with any tool.",
+    "prv.model.t": "Bring your own model",
+    "prv.model.d": "Works with any OpenAI-compatible API (Zhipu / DeepSeek / Kimi / Volc Ark / OpenAI).",
+    "prv.telemetry.t": "No telemetry",
+    "prv.telemetry.d": "No account, no subscription, no analytics. The only outbound requests go to services you configure yourself.",
+    "prv.migrate.t": "Portable by design",
+    "prv.migrate.d": "The data directory is separate from the app — copying it is a backup, and moving devices is trivial.",
+    "faq.h2": "FAQ",
+    "faq.q1": "What do I need to configure?",
+    "faq.a1": "After installing, enter any OpenAI-compatible LLM API on the Settings page to unlock all AI features. Feishu (calendar/push) and mailbox (IMAP) are optional — everything else works without them.",
+    "faq.q2": "Why isn't the source code open?",
+    "faq.a2": "It's a personal project and the source is closed for now. The installers are not obfuscated, and local data is standard SQLite you can inspect or export with any tool — trust transparent data, not a black box.",
+    "faq.q3": "How do I upgrade?",
+    "faq.a3": "Since v0.1.1, Windows / Linux support in-app auto-updates (background download, one-click restart-install); macOS links to the latest download under Settings → About. You can also reinstall from this page anytime — your data carries over.",
+    "faq.q4": "Does it work offline?",
+    "faq.a4": "Local features — schedule, tasks, notes, previously fetched news — work fully offline. AI summaries/chat and external sync (Feishu/mail/RSS) need a network.",
+    "faq.q5": "Will upgrading lose my data?",
+    "faq.a5": "No. Data lives in the OS-standard app-data directory, separate from the program; reinstalling over the top inherits everything.",
+    "footer.tagline": "AI Workspace · Local-first private office assistant",
+    "footer.license.pre": "Released under the",
+    "footer.license.post": "license",
+    "suggest.badge": "Recommended for your system",
+    "hero.dl.os": "Download for {os}",
+    "hero.hint.detected": "Detected system: {os}"
+  }
+};
+
+(function () {
+  function detect() {
+    try {
+      var saved = localStorage.getItem("site-lang");
+      if (saved === "zh" || saved === "en") return saved;
+    } catch (e) {}
+    return /^zh/i.test(navigator.language || "") ? "zh" : "en";
+  }
+  var lang = detect();
+
+  window.siteApplyLang = function (next, persist) {
+    lang = next;
+    if (persist) {
+      try { localStorage.setItem("site-lang", next); } catch (e) {}
+    }
+    var dict = SITE_I18N[next];
+    document.documentElement.lang = next === "zh" ? "zh-CN" : "en";
+    document.title = dict["meta.title"];
+    var metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) metaDesc.setAttribute("content", dict["meta.desc"]);
+    var nodes = document.querySelectorAll("[data-i18n]");
+    for (var i = 0; i < nodes.length; i++) {
+      var key = nodes[i].getAttribute("data-i18n");
+      if (dict[key] != null) nodes[i].textContent = dict[key];
+    }
+    var alts = document.querySelectorAll("[data-i18n-alt]");
+    for (var j = 0; j < alts.length; j++) {
+      var akey = alts[j].getAttribute("data-i18n-alt");
+      if (dict[akey] != null) alts[j].setAttribute("alt", dict[akey]);
+    }
+    var toggle = document.getElementById("lang-toggle");
+    if (toggle) toggle.textContent = dict["lang.toggle"];
+  };
+  siteApplyLang(lang);
+})();
+</script>
 </head>
 <body>
 
@@ -123,29 +312,30 @@
   <div class="wrap nav">
     <a class="logo" href="#">
       <svg width="26" height="26" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#4F46E5"/><circle cx="32" cy="26" r="7" fill="#fff"/><path d="M18 50a14 14 0 0 1 28 0z" fill="#fff"/></svg>
-      AI 工作台
+      <span data-i18n="logo">AI 工作台</span>
     </a>
     <nav class="nav-links">
-      <a href="#features">功能</a><a href="#gallery">界面</a><a href="#download">下载</a><a href="#privacy">隐私</a><a href="#faq">FAQ</a>
+      <a href="#features" data-i18n="nav.features">功能</a><a href="#gallery" data-i18n="nav.gallery">界面</a><a href="#download" data-i18n="nav.download">下载</a><a href="#privacy" data-i18n="nav.privacy">隐私</a><a href="#faq">FAQ</a>
     </nav>
     <div class="nav-cta">
-      <a class="btn btn-primary" href="#download">立即下载</a>
+      <button class="btn" id="lang-toggle" type="button">English</button>
+      <a class="btn btn-primary" href="#download" data-i18n="nav.cta">立即下载</a>
     </div>
   </div>
 </header>
 
 <div class="wrap hero">
-  <div class="chip"><span class="dot"></span>最新版本 <b id="ver">v0.1.1</b><span id="verdate" style="opacity:.7"></span></div>
-  <h1>跑在你自己电脑上的<br>私人办公助理</h1>
-  <p class="sub">日程、任务、资讯、邮件、提醒 —— 一个应用全部搞定。数据留在本机，AI 由你自己的大模型接口驱动，无订阅、无云端、无遥测。</p>
+  <div class="chip"><span class="dot"></span><span data-i18n="chip.latest">最新版本</span>&nbsp;<b id="ver">v0.1.1</b><span id="verdate" style="opacity:.7"></span></div>
+  <h1><span data-i18n="hero.title1">跑在你自己电脑上的</span><br><span data-i18n="hero.title2">私人办公助理</span></h1>
+  <p class="sub" data-i18n="hero.sub">日程、任务、资讯、邮件、提醒 —— 一个应用全部搞定。数据留在本机，AI 由你自己的大模型接口驱动，无订阅、无云端、无遥测。</p>
   <div class="cta">
-    <a class="btn btn-primary btn-lg" id="hero-dl" href="#download">立即下载</a>
-    <a class="btn btn-lg" href="https://github.com/leisurehuang/ai-workspace-release" target="_blank" rel="noopener">GitHub 仓库</a>
+    <a class="btn btn-primary btn-lg" id="hero-dl" href="#download" data-i18n="hero.download">立即下载</a>
+    <a class="btn btn-lg" href="https://github.com/leisurehuang/ai-workspace-release" target="_blank" rel="noopener" data-i18n="hero.github">GitHub 仓库</a>
   </div>
-  <div class="platform-hint" id="hero-hint">macOS · Windows · Linux 全平台支持</div>
+  <div class="platform-hint" id="hero-hint" data-i18n="hero.platforms">macOS · Windows · Linux 全平台支持</div>
   <div class="shot-frame reveal">
     <div class="bar"><i></i><i></i><i></i></div>
-    <img src="./docs/screenshots/dashboard.png" alt="AI 工作台仪表盘" width="1440" height="900">
+    <img src="./docs/screenshots/dashboard.png" alt="AI 工作台仪表盘" data-i18n-alt="hero.shot.alt" width="1440" height="900">
   </div>
 </div>
 
@@ -153,16 +343,16 @@
   <div class="wrap">
     <div class="sec-head reveal">
       <div class="kicker">Features</div>
-      <h2>它能做什么</h2>
-      <p>六个模块相互打通：便签一键变任务，日程任务汇成晨报，重要邮件主动找你。</p>
+      <h2 data-i18n="feat.h2">它能做什么</h2>
+      <p data-i18n="feat.sub">六个模块相互打通：便签一键变任务，日程任务汇成晨报，重要邮件主动找你。</p>
     </div>
     <div class="grid grid-3">
-      <div class="feature reveal"><div class="icon">📅</div><h3>会议日程</h3><p>同步飞书日历：今日时间轴、本周总览、会议统计，会前自动提醒，进行中的会议实时标记。</p></div>
-      <div class="feature reveal"><div class="icon">🗒</div><h3>便签</h3><p>随手记录、置顶、颜色标记。一键让 AI 解析成任务——自动提炼标题、优先级与截止日。</p></div>
-      <div class="feature reveal"><div class="icon">📋</div><h3>任务看板</h3><p>可配置列、拖拽流转、P0-P3 优先级、标签、过期高亮，看板 / 优先级 / 截止日三种视图。</p></div>
-      <div class="feature reveal"><div class="icon">📰</div><h3>每日资讯</h3><p>RSS 抓取 + AI 分类与一句话摘要。想加新分类？写一段提示词就够了。</p></div>
-      <div class="feature reveal"><div class="icon">📧</div><h3>邮件关注</h3><p>IMAP 同步收件箱，关注规则 + AI 重要性打分，老板的邮件再也不会淹没在周报里。</p></div>
-      <div class="feature reveal"><div class="icon">🔔</div><h3>AI 助理</h3><p>每日晨报、周报草稿、基于本地数据的对话问答——问一句"我今天有什么会"就有答案。</p></div>
+      <div class="feature reveal"><div class="icon">📅</div><h3 data-i18n="feat.calendar.t">会议日程</h3><p data-i18n="feat.calendar.d">同步飞书日历：今日时间轴、本周总览、会议统计，会前自动提醒，进行中的会议实时标记。</p></div>
+      <div class="feature reveal"><div class="icon">🗒</div><h3 data-i18n="feat.notes.t">便签</h3><p data-i18n="feat.notes.d">随手记录、置顶、颜色标记。一键让 AI 解析成任务——自动提炼标题、优先级与截止日。</p></div>
+      <div class="feature reveal"><div class="icon">📋</div><h3 data-i18n="feat.board.t">任务看板</h3><p data-i18n="feat.board.d">可配置列、拖拽流转、P0-P3 优先级、标签、过期高亮，看板 / 优先级 / 截止日三种视图。</p></div>
+      <div class="feature reveal"><div class="icon">📰</div><h3 data-i18n="feat.news.t">每日资讯</h3><p data-i18n="feat.news.d">RSS 抓取 + AI 分类与一句话摘要。想加新分类？写一段提示词就够了。</p></div>
+      <div class="feature reveal"><div class="icon">📧</div><h3 data-i18n="feat.mail.t">邮件关注</h3><p data-i18n="feat.mail.d">IMAP 同步收件箱，关注规则 + AI 重要性打分，老板的邮件再也不会淹没在周报里。</p></div>
+      <div class="feature reveal"><div class="icon">🔔</div><h3 data-i18n="feat.assistant.t">AI 助理</h3><p data-i18n="feat.assistant.d">每日晨报、周报草稿、基于本地数据的对话问答——问一句“我今天有什么会”就有答案。</p></div>
     </div>
   </div>
 </section>
@@ -171,18 +361,18 @@
   <div class="wrap">
     <div class="sec-head reveal">
       <div class="kicker">Gallery</div>
-      <h2>界面一览</h2>
-      <p>Apple 风格设计语言，全中文界面，明暗双主题。</p>
+      <h2 data-i18n="gal.h2">界面一览</h2>
+      <p data-i18n="gal.sub">Apple 风格设计语言，明暗双主题，支持简体中文 / 繁體中文 / English。</p>
     </div>
     <div class="gallery">
-      <div class="shot reveal"><img src="./docs/screenshots/calendar.png" alt="会议日程" loading="lazy"><div class="cap"><b>会议日程</b><span>今日时间轴 · 本周总览 · 会议统计</span></div></div>
-      <div class="shot reveal"><img src="./docs/screenshots/board.png" alt="任务看板" loading="lazy"><div class="cap"><b>任务看板</b><span>拖拽流转 · 优先级 · 过期高亮</span></div></div>
-      <div class="shot reveal"><img src="./docs/screenshots/notes.png" alt="便签" loading="lazy"><div class="cap"><b>便签</b><span>随手记 · AI 一键转任务</span></div></div>
-      <div class="shot reveal"><img src="./docs/screenshots/news.png" alt="每日资讯" loading="lazy"><div class="cap"><b>每日资讯</b><span>AI 分类摘要 · 提示词自定义分类</span></div></div>
-      <div class="shot reveal"><img src="./docs/screenshots/emails.png" alt="邮件关注" loading="lazy"><div class="cap"><b>邮件关注</b><span>规则 + AI 打分 · 重要邮件主动推送</span></div></div>
-      <div class="shot reveal"><img src="./docs/screenshots/assistant.png" alt="AI 助理" loading="lazy"><div class="cap"><b>AI 助理</b><span>本地数据问答 · 晨报 · 周报</span></div></div>
-      <div class="shot reveal"><img src="./docs/screenshots/report.png" alt="周报助手" loading="lazy"><div class="cap"><b>周报助手</b><span>本周数据一键生成周报草稿</span></div></div>
-      <div class="shot reveal"><img src="./docs/screenshots/dashboard-dark.png" alt="暗色模式" loading="lazy"><div class="cap"><b>暗色模式</b><span>全局深色主题支持</span></div></div>
+      <div class="shot reveal"><img src="./docs/screenshots/calendar.png" alt="会议日程" data-i18n-alt="gal.calendar.t" loading="lazy"><div class="cap"><b data-i18n="gal.calendar.t">会议日程</b><span data-i18n="gal.calendar.d">今日时间轴 · 本周总览 · 会议统计</span></div></div>
+      <div class="shot reveal"><img src="./docs/screenshots/board.png" alt="任务看板" data-i18n-alt="gal.board.t" loading="lazy"><div class="cap"><b data-i18n="gal.board.t">任务看板</b><span data-i18n="gal.board.d">拖拽流转 · 优先级 · 过期高亮</span></div></div>
+      <div class="shot reveal"><img src="./docs/screenshots/notes.png" alt="便签" data-i18n-alt="gal.notes.t" loading="lazy"><div class="cap"><b data-i18n="gal.notes.t">便签</b><span data-i18n="gal.notes.d">随手记 · AI 一键转任务</span></div></div>
+      <div class="shot reveal"><img src="./docs/screenshots/news.png" alt="每日资讯" data-i18n-alt="gal.news.t" loading="lazy"><div class="cap"><b data-i18n="gal.news.t">每日资讯</b><span data-i18n="gal.news.d">AI 分类摘要 · 提示词自定义分类</span></div></div>
+      <div class="shot reveal"><img src="./docs/screenshots/emails.png" alt="邮件关注" data-i18n-alt="gal.mail.t" loading="lazy"><div class="cap"><b data-i18n="gal.mail.t">邮件关注</b><span data-i18n="gal.mail.d">规则 + AI 打分 · 重要邮件主动推送</span></div></div>
+      <div class="shot reveal"><img src="./docs/screenshots/assistant.png" alt="AI 助理" data-i18n-alt="gal.assistant.t" loading="lazy"><div class="cap"><b data-i18n="gal.assistant.t">AI 助理</b><span data-i18n="gal.assistant.d">本地数据问答 · 晨报 · 周报</span></div></div>
+      <div class="shot reveal"><img src="./docs/screenshots/report.png" alt="周报助手" data-i18n-alt="gal.report.t" loading="lazy"><div class="cap"><b data-i18n="gal.report.t">周报助手</b><span data-i18n="gal.report.d">本周数据一键生成周报草稿</span></div></div>
+      <div class="shot reveal"><img src="./docs/screenshots/dashboard-dark.png" alt="暗色模式" data-i18n-alt="gal.dark.t" loading="lazy"><div class="cap"><b data-i18n="gal.dark.t">暗色模式</b><span data-i18n="gal.dark.d">全局深色主题支持</span></div></div>
     </div>
   </div>
 </section>
@@ -191,35 +381,35 @@
   <div class="wrap">
     <div class="sec-head reveal">
       <div class="kicker">Download</div>
-      <h2>下载安装</h2>
-      <p>免费开源协议分发（MIT）。Windows / Linux 支持应用内自动更新，macOS 一键直达新版本。</p>
+      <h2 data-i18n="dl.h2">下载安装</h2>
+      <p data-i18n="dl.sub">免费开源协议分发（MIT）。Windows / Linux 支持应用内自动更新，macOS 一键直达新版本。</p>
     </div>
     <div class="dl-grid">
       <div class="dl reveal" data-os="mac">
         <div class="icon" style="background:transparent;color:var(--text)"><svg width="34" height="34" viewBox="0 0 24 24" fill="none"><path d="M16.7 12.9c0-2.4 2-3.6 2.1-3.7-1.1-1.7-2.9-1.9-3.5-1.9-1.5-.2-2.9.9-3.7.9-.8 0-1.9-.9-3.2-.8-1.6 0-3.1 1-4 2.4-1.7 3-0.4 7.3 1.2 9.7.8 1.2 1.8 2.5 3.1 2.4 1.2-.1 1.7-.8 3.2-.8s1.9.8 3.2.8c1.3 0 2.2-1.2 3-2.4.9-1.4 1.3-2.7 1.3-2.8-.1 0-2.6-1-2.7-3.8zM14.4 5.6c.7-.8 1.1-1.9 1-3.1-1 0-2.2.7-2.9 1.5-.6.7-1.2 1.9-1 3 1.1.1 2.2-.6 2.9-1.4z" fill="currentColor"/><rect x="1" y="1" width="22" height="22" rx="5" stroke="var(--line)" fill="none"/></svg></div>
         <div class="os">macOS</div>
-        <div class="note">Apple 芯片（M 系列）</div>
-        <a class="btn btn-primary" href="https://github.com/leisurehuang/ai-workspace-release/releases/latest/download/ai-workspace-arm64.dmg">下载 .dmg</a>
-        <div style="margin-top:10px"><a style="font-size:12.5px;color:var(--muted)" href="https://github.com/leisurehuang/ai-workspace-release/releases/latest/download/ai-workspace-x64.dmg">Intel 芯片版本 →</a></div>
+        <div class="note" data-i18n="dl.mac.note">Apple 芯片（M 系列）</div>
+        <a class="btn btn-primary" href="https://github.com/leisurehuang/ai-workspace-release/releases/latest/download/ai-workspace-arm64.dmg" data-i18n="dl.mac.btn">下载 .dmg</a>
+        <div style="margin-top:10px"><a style="font-size:12.5px;color:var(--muted)" href="https://github.com/leisurehuang/ai-workspace-release/releases/latest/download/ai-workspace-x64.dmg" data-i18n="dl.mac.intel">Intel 芯片版本 →</a></div>
       </div>
       <div class="dl reveal" data-os="win">
         <div class="icon" style="background:transparent;color:var(--text)"><svg width="34" height="34" viewBox="0 0 24 24"><path d="M3 5.5l7.5-1v7H3v-6zm0 13l7.5 1v-7H3v6zm8.5 1.2L21 21v-8.5h-9.5v7.2zm0-15.4v7.2H21V3l-9.5 1.3z" fill="currentColor"/></svg></div>
         <div class="os">Windows</div>
-        <div class="note">Windows 10 / 11（x64）</div>
-        <a class="btn btn-primary" href="https://github.com/leisurehuang/ai-workspace-release/releases/latest/download/ai-workspace-setup.exe">下载安装器</a>
-        <div style="margin-top:10px;font-size:12.5px;color:var(--muted)">支持应用内自动更新</div>
+        <div class="note" data-i18n="dl.win.note">Windows 10 / 11（x64）</div>
+        <a class="btn btn-primary" href="https://github.com/leisurehuang/ai-workspace-release/releases/latest/download/ai-workspace-setup.exe" data-i18n="dl.win.btn">下载安装器</a>
+        <div style="margin-top:10px;font-size:12.5px;color:var(--muted)" data-i18n="dl.win.auto">支持应用内自动更新</div>
       </div>
       <div class="dl reveal" data-os="linux">
         <div class="icon" style="background:transparent;color:var(--text)"><svg width="34" height="34" viewBox="0 0 24 24"><path d="M12 2c-2.4 0-3.9 1.9-3.9 4.3 0 1.6.3 2.4-.4 3.9-.8 1.6-2.2 3.4-2.6 5.3-.3 1.5.1 2.5 1 2.4.3 0 .5.3.4.7-.2.8.3 1.5 1.5 1.6 1.1.1 2.4.6 4 .6s2.9-.5 4-.6c1.2-.1 1.7-.8 1.5-1.6-.1-.4.1-.7.4-.7.9.1 1.3-.9 1-2.4-.4-1.9-1.8-3.7-2.6-5.3-.7-1.5-.4-2.3-.4-3.9C15.9 3.9 14.4 2 12 2z" fill="currentColor"/><circle cx="10" cy="7.5" r="1" fill="var(--card)"/><circle cx="14" cy="7.5" r="1" fill="var(--card)"/><ellipse cx="12" cy="15.5" rx="4.2" ry="3" fill="var(--card)"/></svg></div>
         <div class="os">Linux</div>
-        <div class="note">AppImage / deb（x64）</div>
-        <a class="btn btn-primary" href="https://github.com/leisurehuang/ai-workspace-release/releases/latest/download/ai-workspace-linux-x86_64.AppImage">下载 AppImage</a>
-        <div style="margin-top:10px"><a style="font-size:12.5px;color:var(--muted)" href="https://github.com/leisurehuang/ai-workspace-release/releases/latest/download/ai-workspace-linux-amd64.deb">deb 包（Debian/Ubuntu）→</a></div>
+        <div class="note" data-i18n="dl.linux.note">AppImage / deb（x64）</div>
+        <a class="btn btn-primary" href="https://github.com/leisurehuang/ai-workspace-release/releases/latest/download/ai-workspace-linux-x86_64.AppImage" data-i18n="dl.linux.btn">下载 AppImage</a>
+        <div style="margin-top:10px"><a style="font-size:12.5px;color:var(--muted)" href="https://github.com/leisurehuang/ai-workspace-release/releases/latest/download/ai-workspace-linux-amd64.deb" data-i18n="dl.linux.deb">deb 包（Debian/Ubuntu）→</a></div>
       </div>
     </div>
     <div class="dl-note reveal">
-      个人项目未购买代码签名证书：macOS 首次打开请右键 →「打开」；Windows SmartScreen 请选「仍要运行」。<br>
-      全部版本历史见 <a href="https://github.com/leisurehuang/ai-workspace-release/releases" target="_blank" rel="noopener">Releases</a>。
+      <span data-i18n="dl.sign1">个人项目未购买代码签名证书：macOS 首次打开请右键 →「打开」；Windows SmartScreen 请选「仍要运行」。</span><br>
+      <span data-i18n="dl.history">全部版本历史见</span> <a href="https://github.com/leisurehuang/ai-workspace-release/releases" target="_blank" rel="noopener">Releases</a>。
     </div>
   </div>
 </section>
@@ -228,14 +418,14 @@
   <div class="wrap">
     <div class="sec-head reveal">
       <div class="kicker">Privacy</div>
-      <h2>数据与隐私</h2>
-      <p>你的工作数据值得留在你自己手里。</p>
+      <h2 data-i18n="prv.h2">数据与隐私</h2>
+      <p data-i18n="prv.sub">你的工作数据值得留在你自己手里。</p>
     </div>
     <div class="privacy">
-      <div class="feature reveal"><div class="icon">🔒</div><h3>本地优先</h3><p>全部数据存本机 SQLite，密钥 AES-256-GCM 加密落盘，随时用任意工具查看导出。</p></div>
-      <div class="feature reveal"><div class="icon">🧠</div><h3>自带模型</h3><p>任意 OpenAI 兼容接口（智谱 / DeepSeek / Kimi / 火方舟 / OpenAI）均可接入。</p></div>
-      <div class="feature reveal"><div class="icon">🚫</div><h3>无遥测</h3><p>无账号、无订阅、无埋点。唯一的出站请求发往你自己配置的服务。</p></div>
-      <div class="feature reveal"><div class="icon">📦</div><h3>自由迁移</h3><p>数据目录独立于应用，拷贝即备份，跨设备迁移零门槛。</p></div>
+      <div class="feature reveal"><div class="icon">🔒</div><h3 data-i18n="prv.local.t">本地优先</h3><p data-i18n="prv.local.d">全部数据存本机 SQLite，密钥 AES-256-GCM 加密落盘，随时用任意工具查看导出。</p></div>
+      <div class="feature reveal"><div class="icon">🧠</div><h3 data-i18n="prv.model.t">自带模型</h3><p data-i18n="prv.model.d">任意 OpenAI 兼容接口（智谱 / DeepSeek / Kimi / 火山方舟 / OpenAI）均可接入。</p></div>
+      <div class="feature reveal"><div class="icon">🚫</div><h3 data-i18n="prv.telemetry.t">无遥测</h3><p data-i18n="prv.telemetry.d">无账号、无订阅、无埋点。唯一的出站请求发往你自己配置的服务。</p></div>
+      <div class="feature reveal"><div class="icon">📦</div><h3 data-i18n="prv.migrate.t">自由迁移</h3><p data-i18n="prv.migrate.d">数据目录独立于应用，拷贝即备份，跨设备迁移零门槛。</p></div>
     </div>
   </div>
 </section>
@@ -244,25 +434,31 @@
   <div class="wrap">
     <div class="sec-head reveal">
       <div class="kicker">FAQ</div>
-      <h2>常见问题</h2>
+      <h2 data-i18n="faq.h2">常见问题</h2>
     </div>
     <div style="max-width:760px;margin:0 auto">
-      <details class="reveal"><summary>需要配置什么才能用？</summary><p>安装后在「设置」页填入任意 OpenAI 兼容大模型接口即可解锁全部 AI 能力；飞书（日历/推送）与邮箱（IMAP）按需可选配置，不配置也不影响基础功能。</p></details>
-      <details class="reveal"><summary>为什么不开放源代码？</summary><p>个人项目，源码暂不开放。安装包无混淆加壳，本地数据为标准 SQLite，可随时用任意工具查看与导出——不信黑盒，信透明数据。</p></details>
-      <details class="reveal"><summary>怎么升级？</summary><p>v0.1.1 起 Windows / Linux 支持应用内自动更新（后台下载、一键重启安装）；macOS 在「设置 → 关于与更新」直达新版本下载。也可随时从本页重新下载覆盖安装，数据不受影响。</p></details>
-      <details class="reveal"><summary>断网能用吗？</summary><p>日程、任务、便签、历史资讯等本地功能完全可用；AI 摘要问答与外部同步（飞书/邮箱/RSS）需要网络。</p></details>
-      <details class="reveal"><summary>升级会丢数据吗？</summary><p>不会。数据存于系统标准应用数据目录，与程序本体分离，覆盖安装自动继承全部数据。</p></details>
+      <details class="reveal"><summary data-i18n="faq.q1">需要配置什么才能用？</summary><p data-i18n="faq.a1">安装后在「设置」页填入任意 OpenAI 兼容大模型接口即可解锁全部 AI 能力；飞书（日历/推送）与邮箱（IMAP）按需可选配置，不配置也不影响基础功能。</p></details>
+      <details class="reveal"><summary data-i18n="faq.q2">为什么不开放源代码？</summary><p data-i18n="faq.a2">个人项目，源码暂不开放。安装包无混淆加壳，本地数据为标准 SQLite，可随时用任意工具查看与导出——不信黑盒，信透明数据。</p></details>
+      <details class="reveal"><summary data-i18n="faq.q3">怎么升级？</summary><p data-i18n="faq.a3">v0.1.1 起 Windows / Linux 支持应用内自动更新（后台下载、一键重启安装）；macOS 在「设置 → 关于与更新」直达新版本下载。也可随时从本页重新下载覆盖安装，数据不受影响。</p></details>
+      <details class="reveal"><summary data-i18n="faq.q4">断网能用吗？</summary><p data-i18n="faq.a4">日程、任务、便签、历史资讯等本地功能完全可用；AI 摘要问答与外部同步（飞书/邮箱/RSS）需要网络。</p></details>
+      <details class="reveal"><summary data-i18n="faq.q5">升级会丢数据吗？</summary><p data-i18n="faq.a5">不会。数据存于系统标准应用数据目录，与程序本体分离，覆盖安装自动继承全部数据。</p></details>
     </div>
   </div>
 </section>
 
 <footer class="wrap">
-  <div>AI 工作台 · 本地优先的私人办公助理</div>
-  <div><a href="https://github.com/leisurehuang/ai-workspace-release" target="_blank" rel="noopener">GitHub</a> · 按 <a href="https://raw.githubusercontent.com/leisurehuang/ai-workspace-release/main/LICENSE" target="_blank" rel="noopener">MIT</a> 协议分发</div>
+  <div data-i18n="footer.tagline">AI 工作台 · 本地优先的私人办公助理</div>
+  <div><a href="https://github.com/leisurehuang/ai-workspace-release" target="_blank" rel="noopener">GitHub</a> · <span data-i18n="footer.license.pre">按</span> <a href="https://raw.githubusercontent.com/leisurehuang/ai-workspace-release/main/LICENSE" target="_blank" rel="noopener">MIT</a> <span data-i18n="footer.license.post">协议分发</span></div>
 </footer>
 
 <script>
 (function () {
+  var lang = (/^zh/i.test(navigator.language || "")) ? "zh" : "en";
+  try { if (localStorage.getItem("site-lang")) lang = localStorage.getItem("site-lang"); } catch (e) {}
+
+  // body nodes do not exist when the head script runs — apply now
+  window.siteApplyLang(lang);
+
   // latest version from the public release API (graceful on failure)
   fetch("https://api.github.com/repos/leisurehuang/ai-workspace-release/releases/latest")
     .then(function (r) { return r.ok ? r.json() : null; })
@@ -271,26 +467,44 @@
       var ver = document.getElementById("ver");
       var date = document.getElementById("verdate");
       ver.textContent = rel.tag_name;
-      if (rel.published_at) date.textContent = " · " + new Date(rel.published_at).toLocaleDateString("zh-CN");
+      if (rel.published_at) {
+        date.textContent = " · " + new Date(rel.published_at).toLocaleDateString(
+          lang === "zh" ? "zh-CN" : "en-US"
+        );
+      }
     })
     .catch(function () {});
 
-  // platform suggestion
+  // platform suggestion (uses the current language; re-applied on toggle)
   var ua = navigator.userAgent, plat = (navigator.platform || "") + " " + ua;
   var os = /Mac/i.test(plat) ? "mac" : /Win/i.test(plat) ? "win" : /Linux/i.test(plat) && !/Android/i.test(ua) ? "linux" : null;
-  if (os) {
-    var card = document.querySelector('.dl[data-os="' + os + '"]');
-    if (card) {
-      card.classList.add("suggest");
-      var badge = document.createElement("div");
-      badge.className = "suggest-badge";
-      badge.textContent = "为你的平台推荐";
-      card.appendChild(badge);
+  var names = { mac: "macOS", win: "Windows", linux: "Linux" };
+
+  function applyPlatform() {
+    var dict = SITE_I18N[lang];
+    if (os) {
+      var card = document.querySelector('.dl[data-os="' + os + '"]');
+      if (card && !card.querySelector(".suggest-badge")) {
+        card.classList.add("suggest");
+        var badge = document.createElement("div");
+        badge.className = "suggest-badge";
+        card.appendChild(badge);
+      }
+      var badgeEl = card && card.querySelector(".suggest-badge");
+      if (badgeEl) badgeEl.textContent = dict["suggest.badge"];
+      document.getElementById("hero-dl").textContent = dict["hero.dl.os"].replace("{os}", names[os]);
+      document.getElementById("hero-hint").textContent = dict["hero.hint.detected"].replace("{os}", names[os]);
     }
-    var names = { mac: "macOS", win: "Windows", linux: "Linux" };
-    document.getElementById("hero-dl").textContent = "下载 " + names[os] + " 版";
-    document.getElementById("hero-hint").textContent = "检测到你的系统：" + names[os];
   }
+  applyPlatform();
+  window.siteApplyLang = (function (orig) {
+    return function (next, persist) { lang = next; orig(next, persist); applyPlatform(); };
+  })(window.siteApplyLang);
+
+  // language toggle (explicit choice persists; auto-detection does not)
+  document.getElementById("lang-toggle").addEventListener("click", function () {
+    window.siteApplyLang(lang === "zh" ? "en" : "zh", true);
+  });
 
   // scroll reveal
   var io = new IntersectionObserver(function (entries) {

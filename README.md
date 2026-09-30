@@ -6,7 +6,7 @@
 
 日程 · 任务 · 资讯 · 邮件 · 提醒 —— 数据全部留在本机，AI 能力由你自己的大模型接口驱动
 
-macOS / Windows / Linux · 中文界面 · 暗色模式 · 无订阅、无云端、无遥测
+macOS / Windows / Linux · 简体中文 / 繁體中文 / English · 暗色模式 · 无订阅、无云端、无遥测
 
 [在线介绍页](https://leisurehuang.github.io/ai-workspace-release/) · [下载安装](#下载安装) · [功能一览](#功能一览) · [数据与隐私](#数据与隐私) · [常见问题](#常见问题)
 
