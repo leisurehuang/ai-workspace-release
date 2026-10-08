@@ -137,7 +137,7 @@ var SITE_I18N = {
     "feat.h2": "它能做什么",
     "feat.sub": "六个模块相互打通：便签一键变任务，日程任务汇成晨报，重要邮件主动找你。",
     "feat.calendar.t": "会议日程",
-    "feat.calendar.d": "同步飞书日历：今日时间轴、本周总览、会议统计，会前自动提醒，进行中的会议实时标记。",
+    "feat.calendar.d": "同步飞书与 CalDAV 日历：日 / 周 / 月三视图、现在时刻标线，点击查看详情、一键入会，会前自动提醒，进行中的会议实时标记。",
     "feat.notes.t": "便签",
     "feat.notes.d": "随手记录、置顶、颜色标记。一键让 AI 解析成任务——自动提炼标题、优先级与截止日。",
     "feat.board.t": "任务看板",
@@ -145,16 +145,16 @@ var SITE_I18N = {
     "feat.news.t": "每日资讯",
     "feat.news.d": "RSS 抓取 + AI 分类与一句话摘要。想加新分类？写一段提示词就够了。",
     "feat.mail.t": "邮件关注",
-    "feat.mail.d": "IMAP 同步收件箱，关注规则 + AI 重要性打分，老板的邮件再也不会淹没在周报里。",
+    "feat.mail.d": "IMAP 同步收件箱，点击即看原文与附件、应用内直接回复；关注规则 + AI 重要性打分，老板的邮件再也不会淹没在周报里。",
     "feat.assistant.t": "AI 助理",
     "feat.assistant.d": "每日晨报、周报草稿、基于本地数据的对话问答——问一句“我今天有什么会”就有答案。",
     "gal.h2": "界面一览",
     "gal.sub": "Apple 风格设计语言，明暗双主题，支持简体中文 / 繁體中文 / English。",
-    "gal.calendar.t": "会议日程", "gal.calendar.d": "今日时间轴 · 本周总览 · 会议统计",
+    "gal.calendar.t": "会议日程", "gal.calendar.d": "日 / 周 / 月视图 · 事件详情 · 一键入会",
     "gal.board.t": "任务看板", "gal.board.d": "拖拽流转 · 优先级 · 过期高亮",
     "gal.notes.t": "便签", "gal.notes.d": "随手记 · AI 一键转任务",
     "gal.news.t": "每日资讯", "gal.news.d": "AI 分类摘要 · 提示词自定义分类",
-    "gal.mail.t": "邮件关注", "gal.mail.d": "规则 + AI 打分 · 重要邮件主动推送",
+    "gal.mail.t": "邮件关注", "gal.mail.d": "原文与附件 · 应用内回复 · 重要邮件主动推送",
     "gal.assistant.t": "AI 助理", "gal.assistant.d": "本地数据问答 · 晨报 · 周报",
     "gal.report.t": "周报助手", "gal.report.d": "本周数据一键生成周报草稿",
     "gal.dark.t": "暗色模式", "gal.dark.d": "全局深色主题支持",
@@ -211,7 +211,7 @@ var SITE_I18N = {
     "feat.h2": "What it does",
     "feat.sub": "Six connected modules: notes become tasks in one click, schedule and tasks roll up into a morning brief, and important emails find you.",
     "feat.calendar.t": "Meetings",
-    "feat.calendar.d": "Syncs your Feishu calendar: today's timeline, week overview and stats, pre-meeting reminders, and a live badge for ongoing meetings.",
+    "feat.calendar.d": "Syncs Feishu & CalDAV calendars into day / week / month views with a live now-indicator — click any event for details or one-click join; pre-meeting reminders included.",
     "feat.notes.t": "Notes",
     "feat.notes.d": "Quick capture, pinning and color labels. AI turns a note into a task in one click — title, priority and due date extracted automatically.",
     "feat.board.t": "Task Board",
@@ -219,16 +219,16 @@ var SITE_I18N = {
     "feat.news.t": "Daily News",
     "feat.news.d": "RSS fetching with AI categorization and one-line summaries. Want a new category? Just write a prompt.",
     "feat.mail.t": "Email Watch",
-    "feat.mail.d": "IMAP inbox sync with watch rules plus AI importance scoring — your boss's email never drowns in the noise.",
+    "feat.mail.d": "IMAP inbox sync — read the full body with attachments and reply in-app; watch rules plus AI importance scoring push what matters.",
     "feat.assistant.t": "AI Assistant",
     "feat.assistant.d": "Daily brief, weekly report drafts, and chat over your local data — ask \"what meetings do I have today\" and get an answer.",
     "gal.h2": "Screens",
     "gal.sub": "Apple-style design language, light & dark themes, available in Simplified Chinese, Traditional Chinese and English.",
-    "gal.calendar.t": "Meetings", "gal.calendar.d": "Today's timeline · Week overview · Stats",
+    "gal.calendar.t": "Meetings", "gal.calendar.d": "Day / week / month views · Event details · One-click join",
     "gal.board.t": "Task Board", "gal.board.d": "Drag & drop · Priorities · Overdue highlights",
     "gal.notes.t": "Notes", "gal.notes.d": "Quick capture · One-click AI to task",
     "gal.news.t": "Daily News", "gal.news.d": "AI summaries · Prompt-defined categories",
-    "gal.mail.t": "Email Watch", "gal.mail.d": "Rules + AI scoring · Push for what matters",
+    "gal.mail.t": "Email Watch", "gal.mail.d": "Full body & attachments · In-app reply · Push for what matters",
     "gal.assistant.t": "AI Assistant", "gal.assistant.d": "Local-data Q&A · Daily brief · Weekly report",
     "gal.report.t": "Weekly Report", "gal.report.d": "One-click draft from this week's data",
     "gal.dark.t": "Dark mode", "gal.dark.d": "Dark theme across the whole app",
@@ -325,7 +325,7 @@ var SITE_I18N = {
 </header>
 
 <div class="wrap hero">
-  <div class="chip"><span class="dot"></span><span data-i18n="chip.latest">最新版本</span>&nbsp;<b id="ver">v0.1.4</b><span id="verdate" style="opacity:.7"></span></div>
+  <div class="chip"><span class="dot"></span><span data-i18n="chip.latest">最新版本</span>&nbsp;<b id="ver">v0.2.0</b><span id="verdate" style="opacity:.7"></span></div>
   <h1><span data-i18n="hero.title1">跑在你自己电脑上的</span><br><span data-i18n="hero.title2">私人办公助理</span></h1>
   <p class="sub" data-i18n="hero.sub">日程、任务、资讯、邮件、提醒 —— 一个应用全部搞定。数据留在本机，AI 由你自己的大模型接口驱动，无订阅、无云端、无遥测。</p>
   <div class="cta">
@@ -347,11 +347,11 @@ var SITE_I18N = {
       <p data-i18n="feat.sub">六个模块相互打通：便签一键变任务，日程任务汇成晨报，重要邮件主动找你。</p>
     </div>
     <div class="grid grid-3">
-      <div class="feature reveal"><div class="icon">📅</div><h3 data-i18n="feat.calendar.t">会议日程</h3><p data-i18n="feat.calendar.d">同步飞书日历：今日时间轴、本周总览、会议统计，会前自动提醒，进行中的会议实时标记。</p></div>
+      <div class="feature reveal"><div class="icon">📅</div><h3 data-i18n="feat.calendar.t">会议日程</h3><p data-i18n="feat.calendar.d">同步飞书与 CalDAV 日历：日 / 周 / 月三视图、现在时刻标线，点击查看详情、一键入会，会前自动提醒，进行中的会议实时标记。</p></div>
       <div class="feature reveal"><div class="icon">🗒</div><h3 data-i18n="feat.notes.t">便签</h3><p data-i18n="feat.notes.d">随手记录、置顶、颜色标记。一键让 AI 解析成任务——自动提炼标题、优先级与截止日。</p></div>
       <div class="feature reveal"><div class="icon">📋</div><h3 data-i18n="feat.board.t">任务看板</h3><p data-i18n="feat.board.d">可配置列、拖拽流转、P0-P3 优先级、标签、过期高亮，看板 / 优先级 / 截止日三种视图。</p></div>
       <div class="feature reveal"><div class="icon">📰</div><h3 data-i18n="feat.news.t">每日资讯</h3><p data-i18n="feat.news.d">RSS 抓取 + AI 分类与一句话摘要。想加新分类？写一段提示词就够了。</p></div>
-      <div class="feature reveal"><div class="icon">📧</div><h3 data-i18n="feat.mail.t">邮件关注</h3><p data-i18n="feat.mail.d">IMAP 同步收件箱，关注规则 + AI 重要性打分，老板的邮件再也不会淹没在周报里。</p></div>
+      <div class="feature reveal"><div class="icon">📧</div><h3 data-i18n="feat.mail.t">邮件关注</h3><p data-i18n="feat.mail.d">IMAP 同步收件箱，点击即看原文与附件、应用内直接回复；关注规则 + AI 重要性打分，老板的邮件再也不会淹没在周报里。</p></div>
       <div class="feature reveal"><div class="icon">🔔</div><h3 data-i18n="feat.assistant.t">AI 助理</h3><p data-i18n="feat.assistant.d">每日晨报、周报草稿、基于本地数据的对话问答——问一句“我今天有什么会”就有答案。</p></div>
     </div>
   </div>
@@ -365,11 +365,11 @@ var SITE_I18N = {
       <p data-i18n="gal.sub">Apple 风格设计语言，明暗双主题，支持简体中文 / 繁體中文 / English。</p>
     </div>
     <div class="gallery">
-      <div class="shot reveal"><img src="./docs/screenshots/calendar.png" alt="会议日程" data-i18n-alt="gal.calendar.t" loading="lazy"><div class="cap"><b data-i18n="gal.calendar.t">会议日程</b><span data-i18n="gal.calendar.d">今日时间轴 · 本周总览 · 会议统计</span></div></div>
+      <div class="shot reveal"><img src="./docs/screenshots/calendar.png" alt="会议日程" data-i18n-alt="gal.calendar.t" loading="lazy"><div class="cap"><b data-i18n="gal.calendar.t">会议日程</b><span data-i18n="gal.calendar.d">日 / 周 / 月视图 · 事件详情 · 一键入会</span></div></div>
       <div class="shot reveal"><img src="./docs/screenshots/board.png" alt="任务看板" data-i18n-alt="gal.board.t" loading="lazy"><div class="cap"><b data-i18n="gal.board.t">任务看板</b><span data-i18n="gal.board.d">拖拽流转 · 优先级 · 过期高亮</span></div></div>
       <div class="shot reveal"><img src="./docs/screenshots/notes.png" alt="便签" data-i18n-alt="gal.notes.t" loading="lazy"><div class="cap"><b data-i18n="gal.notes.t">便签</b><span data-i18n="gal.notes.d">随手记 · AI 一键转任务</span></div></div>
       <div class="shot reveal"><img src="./docs/screenshots/news.png" alt="每日资讯" data-i18n-alt="gal.news.t" loading="lazy"><div class="cap"><b data-i18n="gal.news.t">每日资讯</b><span data-i18n="gal.news.d">AI 分类摘要 · 提示词自定义分类</span></div></div>
-      <div class="shot reveal"><img src="./docs/screenshots/emails.png" alt="邮件关注" data-i18n-alt="gal.mail.t" loading="lazy"><div class="cap"><b data-i18n="gal.mail.t">邮件关注</b><span data-i18n="gal.mail.d">规则 + AI 打分 · 重要邮件主动推送</span></div></div>
+      <div class="shot reveal"><img src="./docs/screenshots/emails.png" alt="邮件关注" data-i18n-alt="gal.mail.t" loading="lazy"><div class="cap"><b data-i18n="gal.mail.t">邮件关注</b><span data-i18n="gal.mail.d">原文与附件 · 应用内回复 · 重要邮件主动推送</span></div></div>
       <div class="shot reveal"><img src="./docs/screenshots/assistant.png" alt="AI 助理" data-i18n-alt="gal.assistant.t" loading="lazy"><div class="cap"><b data-i18n="gal.assistant.t">AI 助理</b><span data-i18n="gal.assistant.d">本地数据问答 · 晨报 · 周报</span></div></div>
       <div class="shot reveal"><img src="./docs/screenshots/report.png" alt="周报助手" data-i18n-alt="gal.report.t" loading="lazy"><div class="cap"><b data-i18n="gal.report.t">周报助手</b><span data-i18n="gal.report.d">本周数据一键生成周报草稿</span></div></div>
       <div class="shot reveal"><img src="./docs/screenshots/dashboard-dark.png" alt="暗色模式" data-i18n-alt="gal.dark.t" loading="lazy"><div class="cap"><b data-i18n="gal.dark.t">暗色模式</b><span data-i18n="gal.dark.d">全局深色主题支持</span></div></div>
